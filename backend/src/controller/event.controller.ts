@@ -12,3 +12,13 @@ export const NewEvent = async (req: Request, res: Response) => {
   }
 }
 
+export const GetAllEvents = async (req: Request, res: Response) => {
+  try {
+    const events = await EventBase.find()
+    console.log(events)
+    return res.json({ events })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ message: 'Internal Server Error' })
+  }
+}
