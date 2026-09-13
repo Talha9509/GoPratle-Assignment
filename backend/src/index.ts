@@ -1,7 +1,11 @@
 import express, { type Request, type Response } from 'express';
+import connectDB from './config/db.js';
+import 'dotenv/config'
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+await connectDB()
 
 app.use(express.json());
 
