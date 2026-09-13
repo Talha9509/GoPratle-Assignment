@@ -2,12 +2,17 @@ import express, { type Request, type Response } from 'express';
 import connectDB from './config/db.js';
 import 'dotenv/config'
 import EventRoutes from './routes/event.Route.js'
+import cors from 'cors'
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 await connectDB()
 
+const allowedOrigins = ['http://localhost:3000']
+app.use(cors({
+  origin: allowedOrigins
+}))
 app.use(express.json());
 
 app.use('/api/events', EventRoutes)
