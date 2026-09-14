@@ -37,11 +37,11 @@ export const Crew = ({ control, register, errors }: any) => {
 
           <div className="grid grid-cols-2 gap-2 mb-3">
             <label className="flex items-center space-x-2">
-              <input type="checkbox" value="Catering" {...register("crewtype", { required: "Please select at least one service" })} className="w-4 h-4" />
+              <input type="checkbox" value="Security" {...register("crewtype", { required: "Please select at least one service" })} className="w-4 h-4" />
               <span>Security</span>
             </label>
             <label className="flex items-center space-x-2">
-              <input type="checkbox" value="Decor" {...register("crewtype")} className="w-4 h-4" />
+              <input type="checkbox" value="Makeup" {...register("crewtype")} className="w-4 h-4" />
               <span>Makeup</span>
             </label>
             <label className="flex items-center space-x-2">

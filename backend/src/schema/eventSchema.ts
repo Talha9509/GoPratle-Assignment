@@ -24,7 +24,7 @@ const EventSchema = new Schema({
   performerDetails: {
     genres: [{ type: String }],
     interactionLevel: { type: String },
-    performanceDuration: { type: String },
+    performanceDurationInHours: { type: String },
     equipmentProvided: { type: String },
     budget: { type: String }
   },
@@ -40,5 +40,5 @@ const EventSchema = new Schema({
   }
 }, { timestamps: true });
 
-const Event = mongoose.models.Event || mongoose.model('Event', EventSchema);
+export const EventBase = mongoose.models.Event || mongoose.model('Event', EventSchema);
 export default Event;

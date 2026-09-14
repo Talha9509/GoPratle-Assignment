@@ -4,8 +4,11 @@ import { useForm } from 'react-hook-form'
 import { Step1 } from "./Steps/Step1";
 import { Step2 } from "./Steps/Step2";
 import { Step3 } from "./Steps/Step3";
+import { useRouter } from 'next/navigation';
 
 export default function AddEventForm() {
+  const backend = process.env.NEXT_PUBLIC_BACKEND;
+  const router = useRouter()
   const [step, setStep] = useState(1);
 
   const { register, handleSubmit, trigger, control, getValues, formState: { errors } } = useForm({
@@ -88,37 +91,91 @@ export default function AddEventForm() {
     setStep((prev) => prev - 1);
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     if (step != 3) return
     // Step - 1
     const finalEventType = data.eventType === "other" ? data.customEventType : data.eventType;
 
-    // Step - 2: Planner
-    let finalServices = (data.services || [])
-      .filter((service: string) => service !== "other")
+    const selectedCategories = data.category || [];
 
-      if (data.services?.includes("other") && data.customService) {
-      const customArray = data.customService
-        .split(",")
-        .map((s: string) => s.trim())
-        .filter((s: string) => s !== "");
-        
-      finalServices = [...finalServices, ...customArray];
-    }
-
-    const payload = {
+    // 1
+    const payload: any = {
       eventName: data.eventName,
       eventType: finalEventType,
-      eventStartDate: data.dateRange.from,
-      eventEndDate: data.dateRange.to || data.dateRange.from,
+      startDate: data.dateRange.from,
+      endDate: data.dateRange.to || data.dateRange.from,
+      startTime: data.startTime,
+      endTime: data.endTime,
       location: data.location,
-      color: data.color,
-      planner: data.plannerExperience,
-      services: finalServices,
+      venue: data.venue,
+      instructions: data.instructions,
+      categories: selectedCategories,
     };
+
+    // 2. Planner
+    if (selectedCategories.includes("planner")) {
+      let finalServices = (data.services || []).filter((s: string) => s !== "other");
+      if (data.services?.includes("other") && data.customService) {
+        const customArray = data.customService.split(",").map((s: string) => s.trim()).filter(Boolean);
+        finalServices = [...finalServices, ...customArray];
+      }
+      payload.plannerDetails = {
+        services: finalServices,
+        foodOption: data.foodOption,
+        guestCount: Number(data.guestCount),
+        budget: data.budgetPlanner,
+      };
+    }
+
+    // 3. Performer
+    if (selectedCategories.includes("performer")) {
+      let finalGenres = (data.genres || []).filter((s: string) => s !== "other");
+      if (data.genres?.includes("other") && data.customGenre) {
+        const customArray = data.customGenre.split(",").map((s: string) => s.trim()).filter(Boolean);
+        finalGenres = [...finalGenres, ...customArray];
+      }
+      payload.performerDetails = {
+        genres: finalGenres,
+        interactionLevel: data.interactionLevel,
+        performanceDurationInHours: data.performanceDuration,
+        equipmentProvided: data.equipmentProvided,
+        budget: data.budgetPerformer,
+      };
+    }
+
+    // 4. Crew
+    if (selectedCategories.includes("crew")) {
+      let finalCrewTypes = (data.crewtype || []).filter((s: string) => s !== "other");
+      if (data.crewtype?.includes("other") && data.customCrewType) {
+        const customArray = data.customCrewType.split(",").map((s: string) => s.trim()).filter(Boolean);
+        finalCrewTypes = [...finalCrewTypes, ...customArray];
+      }
+
+      const crewList = finalCrewTypes.map((role: string) => ({
+        role: role,
+        count: Number(data[`crewCount_${role}`])
+      }));
+
+      payload.crewDetails = {
+        crewList: crewList,
+        shiftStartTime: data.crewStartTime,
+        shiftEndTime: data.crewEndTime,
+        budget: data.budgetCrew,
+      };
+    }
     console.log(payload)
     console.log("Final Form Data submitted to server:", payload);
-    alert("Form submitted successfully!");
+    const response = await fetch(`${backend}/api/events`, {
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload) 
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    } 
+    const dataa = await response.json()
+    const id = dataa.event._id
+    router.push(`/event/${id}`)
   };
 
   return (

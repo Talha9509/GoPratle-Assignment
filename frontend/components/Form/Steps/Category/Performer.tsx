@@ -177,6 +177,7 @@ export const Performer = ({ control, register, errors }: any) => {
       {/* Performance Duration */}
       <div>
         <label>Performance Duration</label>
+        <span className="text-xs">&nbsp;&nbsp;(in Hours)</span>
         <input {...register("performanceDuration", { required: "Performance Duration is required" })} className="w-full border p-2 rounded mt-1" />
         {errors.performanceDuration && <p className="text-red-500 text-sm">{errors.performanceDuration.message as string}</p>}
       </div>
