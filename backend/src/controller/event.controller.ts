@@ -1,9 +1,16 @@
 import { type Request, type Response } from 'express'
 import { EventBase } from '../schema/eventSchema.js'
+import { EventPayloadSchema } from '../types/eventTypes.js'
 
 export const NewEvent = async (req: Request, res: Response) => {
   try {
-    const event = await EventBase.create(req.body)
+    console.log(req.body)
+    const validatedData = await EventPayloadSchema.safeParse(req.body)
+    console.log(validatedData)
+    if(!validatedData.success){
+      return res.status(422).json({ message: "Invalid Inputs" })
+    }
+    const event = await EventBase.create(validatedData.data)
     console.log(event)
     return res.json({ message: 'Event created', event: event })
   } catch (error) {
