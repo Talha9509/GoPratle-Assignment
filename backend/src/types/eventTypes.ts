@@ -10,7 +10,7 @@ const PlannerDetailsSchema = z.object({
 const PerformerDetailsSchema = z.object({
   genres: z.array(z.string()).min(1, "At least one genre is required").max(2, "Maximum 2 genres allowed"),
   interactionLevel: z.enum(["no", "medium", "high"]),
-  performanceDuration: z.string().min(1, "Performance duration is required"),
+  performanceDurationInHours: z.string().min(1, "Performance duration is required"),
   equipmentProvided: z.enum(["yes", "no"]),
   budget: z.string().min(1, "Budget is required")
 });
