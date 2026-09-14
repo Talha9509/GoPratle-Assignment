@@ -1,10 +1,9 @@
 "use client"
-import React from 'react'
+import AddEventFormm from '@/components/Form/AddEventForm'
 
-const page = () => {
+export default function AddEventForm(){
   return (
-    <div>page1</div>
-  )
+      <AddEventFormm />
+  );
 }
 
-export default page
