@@ -103,8 +103,8 @@ export const Crew = ({ control, register, errors }: any) => {
               })}
               className="w-full border p-2 rounded focus:ring-blue-500 focus:border-blue-500"
             />
-            {errors.startTime && (
-              <p className="text-red-500 text-sm mt-1">{errors.startTime.message as string}</p>
+            {errors.crewStartTime && (
+              <p className="text-red-500 text-sm mt-1">{errors.crewStartTime.message as string}</p>
             )}
           </div>
 
@@ -117,14 +117,14 @@ export const Crew = ({ control, register, errors }: any) => {
               {...register("crewEndTime", {
                 required: "End time is required",
                 validate: (value: any, formValues: any) => {
-                  if (!formValues.startTime) return true; 
-                  return value > formValues.startTime || "End time must be after start time";
+                  if (!formValues.crewStartTime) return true; 
+                  return value > formValues.crewStartTime || "End time must be after start time";
                 }
               })}
               className="w-full border p-2 rounded focus:ring-blue-500 focus:border-blue-500"
             />
-            {errors.endTime && (
-              <p className="text-red-500 text-sm mt-1">{errors.endTime.message as string}</p>
+            {errors.crewEndTime && (
+              <p className="text-red-500 text-sm mt-1">{errors.crewEndTime.message as string}</p>
             )}
           </div>
         </div>
