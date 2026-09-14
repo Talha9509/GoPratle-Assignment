@@ -1,51 +1,55 @@
-// Base event fields shared by all event types
-export interface EventBase {
+// ── sub-detail shapes ──────────────────────────────────────────────────────
+
+export interface PlannerDetails {
+  services: string[];
+  foodOption: "none" | "veg" | "non-veg" | "both";
+  guestCount: number;
+  budget: string;
+}
+
+export interface PerformerDetails {
+  genres: string[];
+  interactionLevel: "no" | "medium" | "high";
+  performanceDurationInHours: string;
+  equipmentProvided: "yes" | "no";
+  budget: string;
+}
+
+export interface CrewMember {
+  role: string;
+  count: number;
+}
+
+export interface CrewDetails {
+  crewList: CrewMember[];
+  shiftStartTime: string;
+  shiftEndTime: string;
+  budget: string;
+}
+
+// ── main event shape ───────────────────────────────────────────────────────
+
+export type CategoryKey = "planner" | "performer" | "crew";
+
+export interface Event {
   _id: string;
   eventName: string;
   eventType: string;
-  date: string; // ISO date string from MongoDB
+  startDate: string;  
+  endDate: string;    
+  startTime: string;
+  endTime: string;
   location: string;
   venue?: string;
-  categorySelector: "Event Planner" | "Performer" | "Crew";
+  instructions?: string;
+  categories: CategoryKey[];
+  plannerDetails?: PlannerDetails;
+  performerDetails?: PerformerDetails;
+  crewDetails?: CrewDetails;
   createdAt: string;
   updatedAt: string;
 }
 
-// Planner-specific fields
-export interface PlannerEvent extends EventBase {
-  categorySelector: "Event Planner";
-  budgetRange: string;
-  requiredServices: string[];
-  guestCount: number;
-  foodPreference?: "Veg" | "Non-Veg" | "Both" | "None";
-  instructions?: string;
-}
-
-// Performer-specific fields
-export interface PerformerEvent extends EventBase {
-  categorySelector: "Performer";
-  budgetRange: string;
-  genre: string;
-  interactionLevel?: string;
-  performanceDurationMins: number;
-  equipmentProvidedByHost: boolean;
-  instructions?: string;
-}
-
-// Crew-specific fields
-export interface CrewEvent extends EventBase {
-  categorySelector: "Crew";
-  budgetRange: string;
-  crewType: string;
-  crewCount: number;
-  shiftTimings: string;
-  instructions?: string;
-}
-
-// Union type for any event
-export type Event = PlannerEvent | PerformerEvent | CrewEvent;
-
-// API response shapes
 export interface GetAllEventsResponse {
   events: Event[];
 }
@@ -53,4 +57,3 @@ export interface GetAllEventsResponse {
 export interface GetEventByIdResponse {
   event: Event;
 }
-

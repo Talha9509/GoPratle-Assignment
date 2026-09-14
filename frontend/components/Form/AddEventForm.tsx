@@ -179,25 +179,91 @@ export default function AddEventForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-sm">
+    <div className="rounded-2xl border border-[#e2c9a8] bg-white overflow-hidden shadow-md">
+      {/* top stripe */}
+      <div className="h-3 w-full bg-[#e43d12]" />
 
-      <div className="mb-6 text-sm font-medium text-gray-500">Step {step} of 3</div>
+      {/* Form Title & Stepper Header */}
+      <div className="px-6 py-6 border-b border-[#e2c9a8] bg-[#EBE9E1]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#e43d12]">New Listing</span>
+            <h1 className="text-2xl font-extrabold text-[#000000] mt-0.5">Post an Event</h1>
+            <p className="text-xs text-[#6b4f35] mt-1">Fill in the details to find the best planners, performers, and crew.</p>
+          </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {step === 1 && <Step1 control={control} register={register} errors={errors} />}
-        {step === 2 && <Step2 control={control} register={register} errors={errors} />}
-        {step === 3 && <Step3 control={control} register={register} errors={errors} />}
-
-        <div className="flex justify-between mt-8">
-          {step > 1 && <button type="button" onClick={prevStep} className="px-4 py-2 border rounded">Back</button>}
-
-          {step < 3 ? (
-            <button type="button" onClick={(e) => nextStep(e)} className="px-4 py-2 bg-blue-600 text-white rounded ml-auto">Next</button>
-          ) : (
-            <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded ml-auto">Submit</button>
-          )}
+          {/* Step Indicator Badges */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {[
+              { num: 1, label: "Basic Info" },
+              { num: 2, label: "Role Details" },
+              { num: 3, label: "Budget & Notes" },
+            ].map((s) => (
+              <div
+                key={s.num}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  step === s.num
+                    ? "bg-[#e43d12] text-white shadow-sm"
+                    : step > s.num
+                    ? "bg-[#e8f5e9] text-[#1b5e20]"
+                    : "bg-white border border-[#e2c9a8] text-[#9c7a5a]"
+                }`}
+              >
+                <span
+                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    step === s.num
+                      ? "bg-white text-[#e43d12]"
+                      : step > s.num
+                      ? "bg-[#1b5e20] text-white"
+                      : "bg-[#f5e6d3] text-[#6b4f35]"
+                  }`}
+                >
+                  {step > s.num ? "✓" : s.num}
+                </span>
+                <span className="hidden sm:inline">{s.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </form>
+      </div>
+
+      {/* Form Body */}
+      <div className="p-6 md:p-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {step === 1 && <Step1 control={control} register={register} errors={errors} />}
+          {step === 2 && <Step2 control={control} register={register} errors={errors} />}
+          {step === 3 && <Step3 control={control} register={register} errors={errors} />}
+
+          <div className="flex items-center justify-between pt-6 border-t border-[#e2c9a8] mt-8">
+            {step > 1 && (
+              <button
+                type="button"
+                onClick={prevStep}
+                className="px-5 py-2.5 rounded-xl font-semibold border border-[#e2c9a8] text-[#6b4f35] bg-[#EBE9E1] hover:bg-[#f5e6d3] transition flex items-center gap-1.5 text-sm cursor-pointer"
+              >
+                ← Back
+              </button>
+            )}
+
+            {step < 3 ? (
+              <button
+                type="button"
+                onClick={(e) => nextStep(e)}
+                className="px-6 py-2.5 rounded-xl font-semibold text-white bg-[#e43d12] hover:bg-[#c4500e] transition shadow-sm ml-auto flex items-center gap-1.5 text-sm cursor-pointer"
+              >
+                Continue →
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="px-6 py-2.5 rounded-xl font-semibold text-white bg-[#e43d12] hover:bg-[#a44215] transition shadow-sm ml-auto flex items-center gap-1.5 text-sm cursor-pointer"
+              >
+                Publish Event
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

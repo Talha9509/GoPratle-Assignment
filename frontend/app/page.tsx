@@ -1,23 +1,30 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import Link from "next/link";
 import { Event, GetAllEventsResponse } from "@/types/event";
 import EventCard from '@/components/EventCard'
-import Link from "next/link";
+
+// ── skeleton card ──────────────────────────────────────────────────────────
 
 function SkeletonCard() {
   return (
     <div className="rounded-2xl border border-[#e2c9a8] bg-white overflow-hidden">
       <div className="h-2 w-full bg-[#fbb87a] animate-pulse" />
       <div className="p-5 flex flex-col gap-3">
-        <div className="h-4 w-24 rounded bg-[#f5e6d3] animate-pulse" />
+        <div className="flex gap-2">
+          <div className="h-5 w-20 rounded-full bg-[#f5e6d3] animate-pulse" />
+          <div className="h-5 w-16 rounded-full bg-[#f5e6d3] animate-pulse" />
+        </div>
         <div className="h-5 w-3/4 rounded bg-[#f5e6d3] animate-pulse" />
+        <div className="h-4 w-1/3 rounded bg-[#f5e6d3] animate-pulse" />
         <div className="h-3 w-1/2 rounded bg-[#f5e6d3] animate-pulse" />
         <div className="h-3 w-2/3 rounded bg-[#f5e6d3] animate-pulse" />
       </div>
     </div>
   );
 }
+
+// ── page ───────────────────────────────────────────────────────────────────
 
 export default function Home() {
   const backend = process.env.NEXT_PUBLIC_BACKEND;
@@ -48,8 +55,13 @@ export default function Home() {
       <header className="sticky top-0 z-10 border-b border-[#3a2a1a] bg-[#000000]">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-bold text-[#EBE9E1]">GoPratle</span>
+            <Link href={`/`}>
+            <span className="text-xl font-bold text-[#f2e0d7]">GoPratle</span>
+            </Link>
           </div>
+            <Link href={'addevent'} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#e43d12] hover:bg-[#c4500e] text-white transition shadow-sm">
+              Create Event
+          </Link>
         </div>
       </header>
 
@@ -66,10 +78,11 @@ export default function Home() {
       {/* ── content ── */}
       <section className="max-w-6xl mx-auto px-4 py-10">
 
+        {/* stats bar */}
         {!loading && !error && (
-          <Link href={'addevent'} className="mb-6 flex items-center gap-2">
+            <Link href={'addevent'} className="mb-6 flex items-center gap-2">
             <span className="px-3 py-1 rounded-lg text-md font-semibold bg-[#e43d12] text-white">
-              Add Event
+              Create Event
             </span>
           </Link>
         )}
@@ -88,7 +101,7 @@ export default function Home() {
           <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
             <p className="text-lg font-semibold text-red-700">⚠ {error}</p>
             <p className="text-sm mt-1 text-[#9c7a5a]">
-              Something went wrong
+              Make sure the backend is running at{" "}
               <code className="font-mono">{backend}</code>
             </p>
           </div>
@@ -98,10 +111,16 @@ export default function Home() {
         {!loading && !error && events.length === 0 && (
           <div className="text-center py-20">
             <p className="text-5xl mb-4">📭</p>
-            <p className="text-xl font-semibold text-[#1c1410]">No events yet</p>
+            <p className="text-xl font-semibold text-[#000000]">No events yet</p>
             <p className="text-sm mt-1 text-[#9c7a5a]">
-              Add some events via the API to see them here.
+              Add some events to see them here.
             </p>
+            <Link
+              href="/addevent"
+              className="inline-block mt-4 text-sm font-semibold px-4 py-2 rounded-xl bg-[#e43d12] hover:bg-[#c4500e] text-white transition shadow-sm"
+            >
+              + Create First Event
+            </Link>
           </div>
         )}
 
@@ -117,7 +136,7 @@ export default function Home() {
 
       {/* ── footer ── */}
       <footer className="border-t border-[#e2c9a8] mt-auto py-6 text-center text-sm text-[#9c7a5a]">
-        © {new Date().getFullYear()} GoPratle
+        © {new Date().getFullYear()} GoPratle · All Events
       </footer>
     </main>
   );
