@@ -35,7 +35,7 @@ export const Planner = ({ register, control, errors }: any) => {
       <div className="flex items-center gap-2 pb-3 border-b border-[#e2c9a8]">
         <span className="w-1.5 h-4 rounded-full bg-[#e43d12]" />
         <span className="text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-[#fff3e0] text-[#e65100]">
-          Event Manager
+          Event Planner
         </span>
         <h3 className="font-bold text-sm text-[#000000]">Requirements</h3>
       </div>
