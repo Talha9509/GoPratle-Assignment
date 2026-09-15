@@ -1,16 +1,16 @@
 import { type Request, type Response } from 'express'
-import { EventBase } from '../schema/eventSchema.js'
+import Event from '../schema/eventSchema.js'
 import { EventPayloadSchema } from '../types/eventTypes.js'
 
 export const NewEvent = async (req: Request, res: Response) => {
   try {
     console.log(req.body)
-    const validatedData = await EventPayloadSchema.safeParse(req.body)
+    const validatedData = EventPayloadSchema.safeParse(req.body)
     console.log(validatedData)
     if(!validatedData.success){
       return res.status(422).json({ message: "Invalid Inputs" })
     }
-    const event = await EventBase.create(validatedData.data)
+    const event = await Event.create(validatedData.data)
     console.log(event)
     return res.json({ message: 'Event created', event: event })
   } catch (error) {
@@ -21,7 +21,7 @@ export const NewEvent = async (req: Request, res: Response) => {
 
 export const GetAllEvents = async (req: Request, res: Response) => {
   try {
-    const events = await EventBase.find()
+    const events = await Event.find()
     console.log(events)
     return res.json({ events })
   } catch (error) {
@@ -33,7 +33,7 @@ export const GetAllEvents = async (req: Request, res: Response) => {
 export const GetEventbyId = async (req: Request, res: Response) => {
   try {
     const eventId = req.params.id
-    const event = await (EventBase as any).findById(eventId)
+    const event = await (Event as any).findById(eventId)
     console.log(event)
     return res.json({ event })
   } catch (error) {

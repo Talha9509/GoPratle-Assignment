@@ -18,14 +18,14 @@ app.use(express.json());
 
 app.use('/api/events', EventRoutes)
 
-app.listen(PORT, () => {
-  console.log(`[server]: Server is running at http://localhost:${PORT}`);
-});
-
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`[server]: Server is running at http://localhost:${PORT}`);
   });
 }
+
+// app.listen(PORT, () => {
+//   console.log(`[server]: Server is running at http://localhost:${PORT}`);
+// });
 
 export default app;
