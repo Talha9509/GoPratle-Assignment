@@ -10,6 +10,8 @@ export default function AddEventForm() {
   const backend = process.env.NEXT_PUBLIC_BACKEND;
   const router = useRouter()
   const [step, setStep] = useState(1);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, trigger, control, getValues, formState: { errors } } = useForm({
     mode: "onTouched",
@@ -27,10 +29,10 @@ export default function AddEventForm() {
         fieldsToValidate.push("customEventType");
       }
     }
-    
+
     if (step === 2) {
       const selectedCategories = getValues("category") || [];
-      
+
       // PLANNER 
       if (selectedCategories.includes("planner")) {
         fieldsToValidate.push("services", "foodOption", "guestCount");
@@ -42,35 +44,35 @@ export default function AddEventForm() {
         fieldsToValidate.push("genres", "interactionLevel", "performanceDuration", "equipmentProvided");
         if (getValues("genres")?.includes("other")) fieldsToValidate.push("customGenre");
       }
-      
+
       // CREW
       if (selectedCategories.includes("crew")) {
         fieldsToValidate.push("crewtype", "crewStartTime", "crewEndTime");
-        
+
         const rawCrewType = getValues("crewtype");
         const customCrewTypeText = getValues("customCrewType") || "";
-        
-        const selectedCrewType = Array.isArray(rawCrewType) ? rawCrewType 
-        : (typeof rawCrewType === "string" ? [rawCrewType] : []);
-        
+
+        const selectedCrewType = Array.isArray(rawCrewType) ? rawCrewType
+          : (typeof rawCrewType === "string" ? [rawCrewType] : []);
+
         let displayCrewType = selectedCrewType.filter((s: string) => s !== "other");
-        
+
         if (selectedCrewType.includes("other") && customCrewTypeText.trim() !== "") {
           const customArray = customCrewTypeText
-          .split(",")
-          .map((s: string) => s.trim())
-          .filter((s: string) => s !== "");
+            .split(",")
+            .map((s: string) => s.trim())
+            .filter((s: string) => s !== "");
           displayCrewType = [...displayCrewType, ...customArray];
         }
-        
+
         displayCrewType.forEach((service: string) => {
           fieldsToValidate.push(`crewCount_${service}`);
         });
-        
+
         if (selectedCrewType.includes("other")) fieldsToValidate.push("customCrewType");
       }
     }
-    
+
     if (step === 3) {
       const selectedCategories = getValues("category") || [];
       fieldsToValidate = ["instructions"];
@@ -93,6 +95,8 @@ export default function AddEventForm() {
 
   const onSubmit = async (data: any) => {
     if (step != 3) return
+    setSubmitError(null);
+    setIsSubmitting(true);
     // Step - 1
     const finalEventType = data.eventType === "other" ? data.customEventType : data.eventType;
 
@@ -166,23 +170,36 @@ export default function AddEventForm() {
     console.log("payload")
     console.log(payload)
     console.log("Final Form Data submitted to server:", payload);
-    const response = await fetch(`${backend}/api/events`, {
-      method: 'POST', 
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload) 
-    })
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    } 
-    const dataa = await response.json()
-    console.log("response from backend")
-    console.log(dataa)
-    const id = dataa.event._id
-    router.push(`/event/${id}`)
+    try {
+      const response = await fetch(`${backend}/api/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Submission failed (${response.status})`);
+      }
+      const dataa = await response.json()
+      console.log("response from backend")
+      console.log(dataa)
+      const id = dataa.event._id
+      router.push(`/event/${id}`)
+    } catch (error: any) {
+      setSubmitError(error.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="rounded-2xl border border-[#e2c9a8] bg-white overflow-hidden shadow-md">
+
+      {/* error message */}
+      {submitError && (
+        <p className="text-red-600 text-sm font-medium">⚠ {submitError}</p>
+      )}
+
       {/* top stripe */}
       <div className="h-3 w-full bg-[#e43d12]" />
 
@@ -204,22 +221,20 @@ export default function AddEventForm() {
             ].map((s) => (
               <div
                 key={s.num}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  step === s.num
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${step === s.num
                     ? "bg-[#e43d12] text-white shadow-sm"
                     : step > s.num
-                    ? "bg-[#e8f5e9] text-[#1b5e20]"
-                    : "bg-white border border-[#e2c9a8] text-[#9c7a5a]"
-                }`}
+                      ? "bg-[#e8f5e9] text-[#1b5e20]"
+                      : "bg-white border border-[#e2c9a8] text-[#9c7a5a]"
+                  }`}
               >
                 <span
-                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                    step === s.num
+                  className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${step === s.num
                       ? "bg-white text-[#e43d12]"
                       : step > s.num
-                      ? "bg-[#1b5e20] text-white"
-                      : "bg-[#f5e6d3] text-[#6b4f35]"
-                  }`}
+                        ? "bg-[#1b5e20] text-white"
+                        : "bg-[#f5e6d3] text-[#6b4f35]"
+                    }`}
                 >
                   {step > s.num ? "✓" : s.num}
                 </span>
