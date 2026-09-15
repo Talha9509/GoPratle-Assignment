@@ -163,6 +163,7 @@ export default function AddEventForm() {
         budget: data.budgetCrew,
       };
     }
+    console.log("payload")
     console.log(payload)
     console.log("Final Form Data submitted to server:", payload);
     const response = await fetch(`${backend}/api/events`, {
@@ -174,6 +175,8 @@ export default function AddEventForm() {
       throw new Error(`HTTP error! Status: ${response.status}`);
     } 
     const dataa = await response.json()
+    console.log("response from backend")
+    console.log(dataa)
     const id = dataa.event._id
     router.push(`/event/${id}`)
   };

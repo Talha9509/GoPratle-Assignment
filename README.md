@@ -28,6 +28,7 @@ A dynamic, multi-step form built for the GoPratle Full-Stack Developer Internshi
 The API accepts a dynamic JSON payload based on the selected categories. Example payload for an event requiring both an Event Planner and Crew:
 
 ```bash
+  # Request
 {
   "eventName": "Tech Summit 2026",
   "eventType": "Conference",
@@ -54,5 +55,58 @@ The API accepts a dynamic JSON payload based on the selected categories. Example
     "shiftEndTime": "19:00",
     "budget": "₹30,000"
   }
+}
+```
+
+```bash
+  # Response
+{
+    "message": "Event created",
+    "event": {
+        "eventName": "Tech Summit 2026",
+        "eventType": "Conference",
+        "startDate": "2026-10-15T00:00:00.000Z",
+        "endDate": "2026-10-17T00:00:00.000Z",
+        "startTime": "09:00",
+        "endTime": "18:00",
+        "location": "Hyderabad",
+        "categories": [
+            "planner",
+            "crew"
+        ],
+        "plannerDetails": {
+            "services": [
+                "Catering",
+                "Decoration"
+            ],
+            "foodOption": "both",
+            "guestCount": 500,
+            "budget": "₹2,00,000"
+        },
+        "performerDetails": {
+            "genres": []
+        },
+        "crewDetails": {
+            "crewList": [
+                {
+                    "role": "Security",
+                    "count": 10,
+                    "_id": "6aa8d8bfab1ccd866177a76c"
+                },
+                {
+                    "role": "AV Tech",
+                    "count": 3,
+                    "_id": "6aa8d8bfab1ccd866177a76d"
+                }
+            ],
+            "shiftStartTime": "07:00",
+            "shiftEndTime": "19:00",
+            "budget": "₹30,000"
+        },
+        "_id": "6aa8d8bfab1ccd866177a76b",
+        "createdAt": "2026-09-15T05:33:51.351Z",
+        "updatedAt": "2026-09-15T05:33:51.351Z",
+        "__v": 0
+    }
 }
 ```
