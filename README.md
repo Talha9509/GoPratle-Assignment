@@ -2,6 +2,10 @@
 
 A dynamic, multi-step form built for the GoPratle Full-Stack Developer Internship technical assignment. This application allows users (event hosts) to post event requirements and dynamically adjusts the data collection fields based on the type of event professionals they need (Event Planner, Performer, and/or Crew).
 
+### Live Links
+- **Live Deployment:** [https://go-pratle-assignment.vercel.app]
+- **Video Walkthrough:** [https://drive.google.com/file/d/1fMq6JZoQ81wURmnyh4P1FhQihXIXV7qk/view?usp=sharing]
+
 ---
 
 ## Tech Stack
