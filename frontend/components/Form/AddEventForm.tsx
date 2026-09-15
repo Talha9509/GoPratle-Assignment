@@ -274,9 +274,10 @@ export default function AddEventForm() {
             ) : (
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="px-6 py-2.5 rounded-xl font-semibold text-white bg-[#e43d12] hover:bg-[#a44215] transition shadow-sm ml-auto flex items-center gap-1.5 text-sm cursor-pointer"
               >
-                Publish Event
+                {isSubmitting ? "Publishing..." : "Publish Event"}
               </button>
             )}
           </div>
